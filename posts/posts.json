@@ -1,0 +1,14 @@
+{
+  "posts": [
+    {
+      "message": "今日のお知らせです。詳しくはこちらをご覧ください。",
+      "link": "https://example.com"
+    },
+    {
+      "message": "Facebookページへの自動投稿テストです。"
+    },
+    {
+      "message": "本日の更新情報をお届けします。"
+    }
+  ]
+}
