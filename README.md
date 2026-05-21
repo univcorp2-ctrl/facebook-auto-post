@@ -4,6 +4,11 @@ Facebookページへ自動投稿するためのPython CLIです。GitHub Actions
 
 > 注意: このツールはFacebook **ページ**への投稿を対象にしています。個人プロフィールへの自動投稿ではありません。
 
+## まず読むもの
+
+- [事前設定ガイド（初心者向け）](docs/PRESETTINGS_ja.md)
+- [Smoke Test Workflow](.github/workflows/facebook-smoke-test.yml)
+
 ## 機能
 
 - Facebook Graph APIのPage Feedへテキスト投稿
@@ -83,6 +88,14 @@ POST_TEXT="こんにちは、自動投稿です" POST_LINK="https://example.com"
 
 `.github/workflows/ci.yml` がpush / pull requestでテストを実行します。
 
+### Smoke Test
+
+`.github/workflows/facebook-smoke-test.yml` は以下を確認します。
+
+- pytest
+- `DRY_RUN=true`で投稿コマンド確認
+- `FB_PAGE_ID` / `FB_PAGE_ACCESS_TOKEN` の有無確認
+
 ### 自動投稿
 
 `.github/workflows/facebook-post.yml` が以下で実行されます。
@@ -104,7 +117,10 @@ pytest
 .
 ├── .github/workflows/
 │   ├── ci.yml
-│   └── facebook-post.yml
+│   ├── facebook-post.yml
+│   └── facebook-smoke-test.yml
+├── docs/
+│   └── PRESETTINGS_ja.md
 ├── posts/posts.json
 ├── src/facebook_auto_post/
 │   ├── __init__.py
