@@ -22,18 +22,14 @@ def test_load_posts_from_object(tmp_path):
 
 def test_select_post_uses_explicit_index_modulo():
     posts = resolve_posts(["a", "b", "c"])
-
     selected = select_post(posts, index=4)
-
     assert selected.message == "b"
 
 
 def test_select_post_uses_date_when_index_missing():
     posts = resolve_posts(["a", "b", "c"])
     current = date(2026, 5, 12)
-
     selected = select_post(posts, today=current)
-
     assert selected == posts[current.toordinal() % len(posts)]
 
 
