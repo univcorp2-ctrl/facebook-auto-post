@@ -54,7 +54,6 @@ def test_publish_feed_post_sends_expected_payload():
 
 def test_publish_feed_post_requires_content():
     client = FacebookPageClient(session=FakeSession(FakeResponse(ok=True, payload={})))
-
     with pytest.raises(ValueError, match="message or link is required"):
         client.publish_feed_post(page_id="page-id", page_access_token="token")
 
@@ -68,6 +67,5 @@ def test_publish_feed_post_raises_api_error():
         )
     )
     client = FacebookPageClient(session=session)
-
     with pytest.raises(FacebookAPIError, match="code=190"):
         client.publish_feed_post(page_id="page-id", page_access_token="bad-token", message="hello")
