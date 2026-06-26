@@ -4,23 +4,24 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "facebook-auto-post"
-version = "0.1.0"
-description = "Automated Facebook Page posting CLI for GitHub Actions"
+version = "0.2.0"
+description = "Facebook Page posting and compliant community property listing aggregation to Notion"
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [{ name = "GitHub-GPT Syncer" }]
 dependencies = [
-  "requests>=2.32,<3"
+  "requests>=2.32,<3",
 ]
 
 [project.optional-dependencies]
 dev = [
   "pytest>=8.0",
-  "ruff>=0.8"
+  "ruff>=0.8",
 ]
 
 [project.scripts]
 facebook-auto-post = "facebook_auto_post.cli:main"
+property-notion-sync = "facebook_auto_post.property_sync_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
