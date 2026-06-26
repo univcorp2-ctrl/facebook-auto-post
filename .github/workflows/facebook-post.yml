@@ -24,9 +24,8 @@ on:
         required: false
         type: string
   schedule:
-    - cron: '0 0 * * *'   # 09:00 JST
-    - cron: '0 3 * * *'   # 12:00 JST
-    - cron: '0 9 * * *'   # 18:00 JST
+    # 09:17 JST. GitHub schedule uses UTC and may be delayed under load.
+    - cron: "17 0 * * *"
 
 permissions:
   contents: read
