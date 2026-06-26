@@ -37,14 +37,14 @@ def main(argv: list[str] | None = None) -> int:
             posts_file=posts_file,
             post_index=post_index,
         )
-
         if dry_run:
             print(json.dumps({"dry_run": True, "post": content.as_payload()}, ensure_ascii=False, indent=2))
             return 0
 
         if not config.page_id or not config.page_access_token:
             print(
-                "FB_PAGE_ID and FB_PAGE_ACCESS_TOKEN are required unless --dry-run or DRY_RUN=true is set.",
+                "FB_PAGE_ID and FB_PAGE_ACCESS_TOKEN are required unless --dry-run or "
+                "DRY_RUN=true is set.",
                 file=sys.stderr,
             )
             return 2
