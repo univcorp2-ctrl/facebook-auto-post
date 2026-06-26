@@ -22,27 +22,21 @@ class PostContent:
 def _normalise_post(raw: Any, *, index: int) -> PostContent:
     if not isinstance(raw, dict):
         raise ValueError(f"posts[{index}] must be an object")
-
     message = raw.get("message")
     link = raw.get("link")
-
     if not isinstance(message, str) or not message.strip():
         raise ValueError(f"posts[{index}].message must be a non-empty string")
-
     if link is not None and (not isinstance(link, str) or not link.strip()):
         raise ValueError(f"posts[{index}].link must be a non-empty string when provided")
-
     return PostContent(message=message.strip(), link=link.strip() if isinstance(link, str) else None)
 
 
 def load_posts(path: str | Path) -> list[PostContent]:
     posts_path = Path(path)
     data = json.loads(posts_path.read_text(encoding="utf-8"))
-
     raw_posts = data.get("posts") if isinstance(data, dict) else data
     if not isinstance(raw_posts, list) or not raw_posts:
         raise ValueError("posts file must contain a non-empty list or an object with a non-empty posts list")
-
     return [_normalise_post(raw_post, index=index) for index, raw_post in enumerate(raw_posts)]
 
 
@@ -54,10 +48,8 @@ def select_post(
 ) -> PostContent:
     if not posts:
         raise ValueError("posts must not be empty")
-
     if index is not None:
         return posts[index % len(posts)]
-
     current_date = today or date.today()
     return posts[current_date.toordinal() % len(posts)]
 
@@ -73,6 +65,5 @@ def resolve_post_content(
     if post_text and post_text.strip():
         clean_link = post_link.strip() if isinstance(post_link, str) and post_link.strip() else None
         return PostContent(message=post_text.strip(), link=clean_link)
-
     posts = load_posts(posts_file)
     return select_post(posts, today=today, index=post_index)
