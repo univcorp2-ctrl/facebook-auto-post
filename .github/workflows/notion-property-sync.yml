@@ -1,0 +1,70 @@
+name: Collect community property posts to Notion
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_path:
+        description: "CSV/JSON source path"
+        required: false
+        default: "samples/community_posts.csv"
+        type: string
+      dry_run:
+        description: "Run without creating Notion pages"
+        required: true
+        default: "true"
+        type: choice
+        options:
+          - "true"
+          - "false"
+      notion_sync:
+        description: "Create pages in Notion when dry_run=false"
+        required: true
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+  schedule:
+    # 09:35 JST. Enable by setting repository variable NOTION_SYNC=true and secrets below.
+    - cron: "35 0 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: notion-property-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+      - name: Collect and optionally sync to Notion
+        env:
+          PROPERTY_SOURCE_PATH: ${{ github.event_name == 'workflow_dispatch' && inputs.source_path || vars.PROPERTY_SOURCE_PATH || 'samples/community_posts.csv' }}
+          PROPERTY_SOURCE_TYPE: ${{ vars.PROPERTY_SOURCE_TYPE || 'auto' }}
+          PROPERTY_OUTPUT_PATH: outputs/property-listings.json
+          PROPERTY_MIN_CONFIDENCE: ${{ vars.PROPERTY_MIN_CONFIDENCE || '0.35' }}
+          PROPERTY_SYNC_DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || vars.PROPERTY_SYNC_DRY_RUN || 'true' }}
+          NOTION_SYNC: ${{ github.event_name == 'workflow_dispatch' && inputs.notion_sync || vars.NOTION_SYNC || 'false' }}
+          NOTION_API_KEY: ${{ secrets.NOTION_API_KEY }}
+          NOTION_DATA_SOURCE_ID: ${{ secrets.NOTION_DATA_SOURCE_ID || vars.NOTION_DATA_SOURCE_ID }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID || vars.NOTION_DATABASE_ID }}
+          NOTION_VERSION: ${{ vars.NOTION_VERSION || '2026-03-11' }}
+        run: property-notion-sync
+      - name: Upload extracted listings artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: property-listings
+          path: outputs/property-listings.json
