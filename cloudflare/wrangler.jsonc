@@ -5,9 +5,13 @@
   "compatibility_date": "2026-08-10",
   "workers_dev": true,
   "observability": { "enabled": true },
+  "ai": { "binding": "AI" },
   "triggers": { "crons": ["17 0 * * *"] },
   "vars": {
     "FB_GRAPH_VERSION": "v25.0",
-    "POSTS_URL": "https://raw.githubusercontent.com/univcorp2-ctrl/facebook-auto-post/main/posts/posts.json"
+    "POSTS_URL": "https://raw.githubusercontent.com/univcorp2-ctrl/facebook-auto-post/main/posts/posts.json",
+    "AI_ENABLED": "true",
+    "AI_FALLBACK": "true",
+    "AI_MODEL": "@cf/qwen/qwen3-30b-a3b-fp8"
   }
 }
